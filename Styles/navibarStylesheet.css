@@ -1,0 +1,49 @@
+body{
+	margin:0px;
+}
+
+.navibar {
+	margin: 0;
+	padding: 0;
+	background-color: #333;
+	height: 50px;
+}
+
+.navibar ul{
+	padding:0;
+	margin:0;
+	list-style-type: none;
+}
+
+.navibar-item {
+	float: left;
+	position: relative;
+}
+
+.navibar-submenu {
+	max-height: 0px;
+	background-color: #333;
+	position: absolute;
+	overflow:hidden;
+	width: auto;
+}
+
+.navibar-item:hover .navibar-submenu {
+	max-height:800px;
+	-webkit-transition:max-height 0.2s ease-in;
+	-moz-transition:max-height 0.2s ease-in;
+	transition:max-height 0.2s ease-in;
+	
+}
+
+.navibar li a {
+	display: block;
+	color: white;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+}
+
+.navibar a:hover {
+	background-color: #111;
+}

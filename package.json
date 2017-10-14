@@ -1,0 +1,28 @@
+{
+  "name": "node_js_practice",
+  "version": "1.0.0",
+  "description": "Node JS Practice",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "whoops"
+  ],
+  "author": "me",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cheerio": "^1.0.0-rc.2",
+    "express": "^4.15.4",
+    "node-inspector": "^1.1.1",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "request": "^2.83.0"
+  },
+  "devDependencies": {
+    "babel-loader": "^7.1.1",
+    "webpack": "^3.4.1",
+    "webpack-dev-server": "^2.6.1"
+  }
+}
