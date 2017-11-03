@@ -16,8 +16,10 @@ var server = http.createServer(function(req, res){
     });
 
     req.on('end', function () {
-        req.body = querystring.parse(body);
-        console.log(req.body);
+		if(body != ""){
+			req.body = querystring.parse(body);
+			console.log(req.body);
+		}
 		mainController.getActionMethod(req, res);
     });
 });

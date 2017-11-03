@@ -37,7 +37,7 @@ function draw(){
 		{
 			grid[cellIndex].show();
 			
-			if(isMazeGenerated)
+			if(isMazeGenerated) 
 			{
 				grid[cellIndex].hidden = true;
 			}

@@ -1,24 +1,21 @@
-var dataFunctions = [];
+var dataFunctions = {};
 var fs = require('fs');
 var cheerio = require("cheerio");
-//var request = require("request");
+var https = require('https');
+var request = require("request");
 var urls = ["https://www.mtggoldfish.com/index/XLN#paper","https://www.mtggoldfish.com/index/AKH#paper","https://www.mtggoldfish.com/index/AER#paper","https://www.mtggoldfish.com/index/KLD#paper","https://www.mtggoldfish.com/index/MS2#paper"];
-
-var http = require('http');    
-var urls = ["http://www.google.com","http://www.example.com"];
-var responses = [];
-var completed_requests = 0;
+var completedRequests = 0;
+var contentDir = __dirname + "/Content";
 
 
 dataFunctions.addUser = function(firstName,lastName){
 	var user = lastName + "," + firstName + "\n";
-	fs.appendFile(__dirname + "/../output.txt", user);
+	fs.appendFile(contentDir + "/output.txt", user);
 }
 
-dataFunctions.getMtgPriceList2 = function(req, res){
-	//var finishedStreams = 0;
+dataFunctions.updateMtgPriceList = function(req, res){
 	for(let index in urls){
-		fs.writeFile(__dirname + "/../Data/" + urls[index].substring(34,37) + "WebScrapingData.txt", "");
+		fs.writeFile(contentDir + "/" + urls[index].substring(34,37) + "WebScrapingData.txt", "");
 		
 		let html = "";
 		let webScrapeRequest = request(urls[index]);
@@ -30,8 +27,7 @@ dataFunctions.getMtgPriceList2 = function(req, res){
 		webScrapeRequest.on('end', function(){
 			let $ = cheerio.load(html);
 			let paperClass = ".tablesorter-bootstrap-popover-paper";
-			let onlineClass = ".tablesorter-bootstrap-popover-online";
-			let regex = /((\+|-)?(\d+\.\d+))%$/;
+			let onlineClass = ".tablesorter-bootstrap-popover-online";		
 			let cards = [];
 			let tableRows = $(paperClass + ' tbody tr');
 			
@@ -44,71 +40,82 @@ dataFunctions.getMtgPriceList2 = function(req, res){
 				cards[i].cardSet = urls[index].substring(34,37);
 			};
 			
-			//filtering
-			for(i=cards.length-1; i >= 0; i--){
-				if(parseFloat(regex.exec(cards[i].dailyPriceChange)[3]) < 10){
-					cards.splice(i,1);
-				}
-			}
+			fs.appendFile(contentDir + "/" + urls[index].substring(34,37) + "WebScrapingData.txt", JSON.stringify(cards));
 			
-			for (i=0; i < cards.length; i++){
-				console.log(cards[i].name + ": " + cards[i].price + " - " + cards[i].dailyPriceChange + " - " + cards[i].cardSet);			
-			}
+			completedRequests++;
+			console.log("on end completed requests: " + completedRequests);
 			
-			console.log(cards);
-			fs.appendFile(__dirname + "/../Data/" + urls[index].substring(34,37) + "WebScrapingData.txt", JSON.stringify(cards));
-			//finishedStreams++;
+			if(completedRequests == urls.length){
+				completedRequests = 0;
+				res.writeHead(200, {'Content-Type': 'text'});
+				res.end("Updated!");
+			}
+			console.log();
 		});
 	}
-	/*while(finishedStreams != 4){
-		debugger;
-		setTimeout(function(){}, 500);
-	}*/
-	//finishedStreams = 0;
-	//res.end(data)
 }
-
-
-function sleep(ms){
-		return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 
 dataFunctions.getMtgPriceList = function(req, res){
-	var dataArray = [];
-	
-	
-	
-	for (let i in urls) {
-		dataArray[i] = "";
-		
-		http.get(urls[i], 
-			function(res) 
-			{
-				res.on("data", function(data) 
-				{
-					debugger;
-					dataArray[i] += data.toString().substring(0,1);
-					//console.log("data: " + data + "\n");
-					//console.log("data array: " + dataArray[i]);
-				})
-				res.on("end", function()
-				{
-					completed_requests++;
-					console.log("on end completed requests: " + completed_requests);
-				})
-			})
+	let data = "";
+	let regex = /((\+|-)?(\d+\.\d+))%$/;
+	fs.createReadStream(contentDir + "/" + req.url.substring(4,7) + "WebScrapingData.txt")
+	.on('data', function(chunk) {	
+		data += chunk;
+	})
+	.on('end', function(){				
+		if(data != ""){
+			var cards = JSON.parse(data);
+			//filtering
+			for(i=cards.length-1; i >= 0; i--){				
+				var html = "";
+				
+				for(i=cards.length-1; i >= 0; i--){
+					if(parseFloat(regex.exec(cards[i].dailyPriceChange)[3]) < 7){
+						cards.splice(i,1);
+					}
+					else{
+						console.log(cards[i].name + ": " + cards[i].price + " - " + cards[i].dailyPriceChange + " - " + cards[i].cardSet);		
+						
+						html += 
+						"<tr>" +
+							"<td>" + cards[i].name + "</td>" +
+							"<td>" + cards[i].price + "</td>" +
+							"<td>" + cards[i].dailyPriceChange + "</td>" +
+							"<td>" + cards[i].cardSet + "</td>" + 
+						"</tr>";
+					}						
+				}
+				console.log("pulled " + cards.length + " cards!");
+				console.log();
+				res.writeHead(200, {'Content-Type': 'text/html'});
+				res.end(html);
+			}
+		}
+	});
+}
+
+dataFunctions.getMtgPriceListMustache = function(req , res){
+	let regex = /((\+|-)?(\d+\.\d+))%$/;
+	let data = fs.readFileSync(contentDir + "/XLNWebScrapingData.txt")				
+	if(data != ""){
+		var cards = JSON.parse(data);
+		//filtering
+		for(i=cards.length-1; i >= 0; i--){				
+			var html = "";
+			
+			for(i=cards.length-1; i >= 0; i--){
+				if(parseFloat(regex.exec(cards[i].dailyPriceChange)[3]) < 7){
+					cards.splice(i,1);
+				}
+				else{
+					console.log(cards[i].name + ": " + cards[i].price + " - " + cards[i].dailyPriceChange + " - " + cards[i].cardSet);		
+				}					
+			}
+			console.log("pulled " + cards.length + " cards!");
+			console.log();
+			return cards;
+		}
 	}
-	
-	while(completed_requests != urls.length){
-		console.log(completed_requests);
-		setTimeout(function() {
-			console.log('Blah blah blah blah extra-blah');
-		}, 3000);
-	}
-	
-	res.writeHead(200, {'Content-Type': 'text/html'});
-	res.end(dataArray);
 }
 
 module.exports = dataFunctions;

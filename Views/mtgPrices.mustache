@@ -1,0 +1,44 @@
+<html>
+	<head>
+		<script language="javascript" type="text/javascript" src="jquery-3.1.1.min.js"></script>
+		<script language="javascript" type="text/javascript" src="mtgPricesMustache.js"></script>
+		<script language="javascript" type="text/javascript" src="jquery.tablesorter.js"></script>
+		<script language="javascript" type="text/javascript" src="onHoverHover.js"></script>
+
+		<link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="navibarStylesheet.css">		
+		<link rel="stylesheet" type="text/css" href="tablesorterMetroDarkTheme.css">
+		<link rel="stylesheet" type="text/css" href="mtgPrices.css">
+	</head>
+	<body>
+		<div id="navibar-placeholder"></div>
+		
+		<p style="text-align: center; width: 450px; margin: 0 auto;">
+		<br>
+		<input id="updateCardsBtn" class="btn btn-info" type="submit" name="getCards" value="Update Cards">
+		</br>
+		</br>
+		<table class="table table-striped tablesorter-metro-dark" id="cardTable">
+			<thead>
+				<tr>
+					<th class='header'>Name</th>
+					<th class='header'>Price</th>
+					<th class='header'>Daily Price Change</th>
+					<th class='header'>Set</th>
+				</tr>				
+			</thead>
+			<tbody id="cardTableBody">
+			{{#cards}}
+				<tr>
+					<td>{{name}}</td>
+					<td>{{price}}</td>
+					<td>{{dailyPriceChange}}</td>
+					<td>{{cardSet}}</td>
+				</tr>
+			{{/cards}}
+			</tbody>
+		</table>
+		</p>
+		<br>
+	</body>
+</html>

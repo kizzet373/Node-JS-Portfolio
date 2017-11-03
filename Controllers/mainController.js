@@ -1,9 +1,16 @@
 var mainController = [];
+var globals = __dirname + "/globals.js";
+
+//node modules
+var Mustache = require("mustache");
 var fs = require('fs');
 var bodyParser = require("body-parser");
-var dataFunctions = require(__dirname + "/../Data/dataFunctions.js");
 var cheerio = require("cheerio");
-var logic = require(__dirname + '/../Logic/logic.js');
+
+//my modules
+var dataFunctions = require(globals.paths.Data + "/dataFunctions.js");
+var reactTranspiler = require(globals.paths.Logic + "/reactTranspiler.js");
+var controllerLogic = require(globals.paths.Logic + "/controllerLogic.js");
 
 
 	
@@ -45,52 +52,45 @@ var getGetMethod = function(req,res){
 			res.writeHead(200, {'Content-Type': 'text/html'});
 			fs.createReadStream(__dirname + '/../Views/2dTreeGenerator.html').pipe(res);
 			break;
-		case '/webScraping':
+		case '/mtgPrices':
 			res.writeHead(200, {'Content-Type': 'text/html'});
-			fs.createReadStream(__dirname + '/../Views/webScraping.html').pipe(res);
+			fs.createReadStream(__dirname + '/../Views/mtgPrices.html').pipe(res);
 			break;
 		case '/alphaMaskExample':
 			res.writeHead(200, {'Content-Type': 'text/html'});
 			fs.createReadStream(__dirname + '/../Views/alphaMaskExample.html').pipe(res);
 			break;
+		case '/reactIndex':
+			reactTranspiler.transpileView(req, res, '/reactIndex');
+			break;
+		case '/mtgPricesMustache':
+			let template = fs.readFileSync(__dirname + '/../Views/mtgPrices.mustache');		
+			var cards = dataFunctions.getMtgPriceListMustache(req,res);
+			let view = Mustache.to_html(template.toString(), {cards});
+			view = controllerLogic.addNavigationBar(view);
+			
+			res.writeHead(200, {'Content-Type': 'text/html'});
+			res.end(view);
+			break;
+		case '/asyncTest':				
+				var html = "";
+				fs.createReadStream(__dirname + '/../Views/index.html')
+				.on('data',function(data){
+					html += data;
+				})
+				.on('end',function(){
+					res.writeHead(200, {'Content-Type': 'text/html'});
+					res.end(html);
+				});
+			break;
+			
 			
 		//PARTIAL VIEWS	
 			
 		case '/navibar.html':
 			res.writeHead(200, {'Content-Type': 'text/html'});
 			fs.createReadStream(__dirname + '/../Views/navibar.html').pipe(res);
-			break;
-		case '/getAERPriceList':
-		case '/getAKHPriceList':
-		case '/getKLDPriceList':
-		case '/getMS2PriceList':
-		case '/getXLNPriceList':
-			var data = "";
-			fs.createReadStream(__dirname + "/../Data/" + req.url.substring(4,7) + "WebScrapingData.txt")
-			.on('data', function(chunk) {
-				data += chunk;
-			})
-			.on('end', function(){				
-				if(data != ""){
-					var cards = JSON.parse(data);
-					cards.sort(logic.sortCardsByDescending);
-					
-					var html = "";
-					
-					for(i = 0; i < cards.length; i++){
-						html += 
-						"<tr>" +
-							"<td>" + cards[i].name + "</td>" +
-							"<td>" + cards[i].price + "</td>" +
-							"<td>" + cards[i].dailyPriceChange + "</td>" +
-							"<td>" + cards[i].cardSet + "</td>" + 
- 						"</tr>";
-					}
-					res.writeHead(200, {'Content-Type': 'text/html'});
-					res.end(html);
-				}
-			});
-		break;
+			break;		
 			
 		//STYLESHEETS		
 			
@@ -105,6 +105,26 @@ var getGetMethod = function(req,res){
 		case '/bootstrap.min.css':
 			res.writeHead(200, {'Content-Type': 'text/css'});
 			fs.createReadStream(__dirname + '/../Styles/bootstrap.min.css').pipe(res);
+			break;
+		case '/mtgPrices.css':
+			res.writeHead(200, {'Content-Type': 'text/css'});
+			fs.createReadStream(__dirname + '/../Styles/mtgPrices.css').pipe(res);
+			break;
+		case '/tablesorterDarkTheme.css':
+			res.writeHead(200, {'Content-Type': 'text/css'});
+			fs.createReadStream(__dirname + '/../Styles/tablesorterDarkTheme.css').pipe(res);
+			break;
+		case '/tablesorterMetroDarkTheme.css':
+			res.writeHead(200, {'Content-Type': 'text/css'});
+			fs.createReadStream(__dirname + '/../Styles/tablesorterMetroDarkTheme.css').pipe(res);
+			break;
+		case '/tablesorterDefaultTheme.css':
+			res.writeHead(200, {'Content-Type': 'text/css'});
+			fs.createReadStream(__dirname + '/../Styles/tablesorterDefaultTheme.css').pipe(res);
+			break;
+		case '/tablesorterMaterializeTheme.css':
+			res.writeHead(200, {'Content-Type': 'text/css'});
+			fs.createReadStream(__dirname + '/../Styles/tablesorterMaterializeTheme.css').pipe(res);
 			break;
 			
 		//SCRIPTS
@@ -133,15 +153,26 @@ var getGetMethod = function(req,res){
 			res.writeHead(200, {'Content-Type': 'text/javascript'});
 			fs.createReadStream(__dirname + '/../Scripts/navibar.js').pipe(res);
 			break;
-		case '/webScraping.js':
+		case '/mtgPrices.js':
 			res.writeHead(200, {'Content-Type': 'text/javascript'});
-			fs.createReadStream(__dirname + '/../Scripts/webScraping.js').pipe(res);
+			fs.createReadStream(__dirname + '/../Scripts/mtgPrices.js').pipe(res);
+			break;
+		case '/mtgPricesMustache.js':
+			res.writeHead(200, {'Content-Type': 'text/javascript'});
+			fs.createReadStream(__dirname + '/../Scripts/mtgPricesMustache.js').pipe(res);
 			break;
 		case '/alphaMaskExample.js':
 			res.writeHead(200, {'Content-Type': 'text/javascript'});
 			fs.createReadStream(__dirname + '/../Scripts/alphaMaskExample.js').pipe(res);
 			break;
-			
+		case '/jquery.tablesorter.js':
+			res.writeHead(200, {'Content-Type': 'text/javascript'});
+			fs.createReadStream(__dirname + '/../Scripts/jquery.tablesorter.js').pipe(res);
+			break;
+		case '/onHoverHover.js':
+			res.writeHead(200, {'Content-Type': 'text/javascript'});
+			fs.createReadStream(__dirname + '/../Scripts/onHoverHover.js').pipe(res);
+			break;
 			
 		//Images
 		
@@ -167,15 +198,22 @@ var getGetMethod = function(req,res){
 			});
 			break;
 			
-		//Other
+		//Data
 		
 		case '/api/ninjas':
 			var ninjas =  [{name: 'ryu', age: 29}, {name: 'yoshi', age: 32}];
 			res.writeHead(200, {'Content-Type': 'application/json'});
 			res.end(JSON.stringify(ninjas));
 			break;
+		case '/getAERPriceList':
+		case '/getAKHPriceList':
+		case '/getKLDPriceList':
+		case '/getMS2PriceList':
+		case '/getXLNPriceList':
+			dataFunctions.getMtgPriceList(req,res);			
+			break;
 		case '/api/updatePriceList':		
-			dataFunctions.getMtgPriceList(req, res);			
+			dataFunctions.updateMtgPriceList(req, res);			
 			break;
 			
 		//NOT FOUND	
@@ -201,7 +239,7 @@ var getPostMethod = function(req,res){
 							break;
 						default:
 							res.writeHead(200, {'Content-Type': 'text/html'});
-							res.end("<span>Fucked up</span>");				
+							res.end("<span>Whooops</span>");				
 							break;
 					}
 					return res;

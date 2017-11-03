@@ -6,25 +6,24 @@ body{
 	margin: 0;
 	padding: 0;
 	background-color: #333;
-	height: 50px;
+	height: auto;
 }
 
 .navibar ul{
 	padding:0;
 	margin:0;
 	list-style-type: none;
-}
-
-.navibar-item {
-	float: left;
-	position: relative;
+	height: auto;
+	overflow: display;
+	display: inline-block;
+	width: 100%;
 }
 
 .navibar-submenu {
 	max-height: 0px;
 	background-color: #333;
 	position: absolute;
-	overflow:hidden;
+	overflow: hidden;
 	width: auto;
 }
 
@@ -36,14 +35,41 @@ body{
 	
 }
 
-.navibar li a {
-	display: block;
-	color: white;
-	text-align: center;
-	padding: 14px 16px;
+.navibar-item {
+	float: left;
+	position: relative;
+	border-color: #AAAAAA;
+	border-width: 3px;
+	border-style: outset;
+	padding: 0px;
+	height: auto;
+}
+
+.navibar-subitem {
+	border-color: #AAAAAA;
+	border-width: 3px;
+	border-style: outset;
+}
+
+.navibar-item:hover, .navibar-subitem:hover{
+	background-color: #111;
 	text-decoration: none;
 }
 
-.navibar a:hover {
-	background-color: #111;
+.navibar-item-link, .navibar-subitem-link {
+	display: inline-block;
+	color: white;
+	text-align: center;
+	padding: 14px 0px;
+	text-decoration: none;
+	width: 100%;
+	height: auto;
 }
+
+.navibar-item-link {
+	min-width: 110px;		
+}
+
+navibar-subitem-link {
+}
+
