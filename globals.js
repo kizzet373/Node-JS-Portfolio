@@ -1,6 +1,6 @@
 var globals = [];
 
-globals.paths = [];
+globals.paths = {};
 
 globals.paths.Logic = __dirname + "/Logic";
 globals.paths.Views = __dirname + "/Views";

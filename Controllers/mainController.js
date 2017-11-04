@@ -1,5 +1,5 @@
 var mainController = [];
-var globals = __dirname + "/globals.js";
+var globals = require(__dirname + "/../globals.js");
 
 //node modules
 var Mustache = require("mustache");
@@ -36,35 +36,54 @@ var getGetMethod = function(req,res){
 		//VIEWS
 		
 		case '/':
-		case '/home':
+		case '/home':{
+			let view = fs.readFileSync(globals.paths.Views + '/index.html');
+			view = controllerLogic.addNavigationBar(view);
 			res.writeHead(200, {'Content-Type': 'text/html'});
-			fs.createReadStream(__dirname + '/../Views/index.html').pipe(res);
+			res.end(view);
 			break;
-		case '/contact':
+		}
+		case '/contact':{
+			let view = fs.readFileSync(globals.paths.Views + '/contact.html');
+			view = controllerLogic.addNavigationBar(view);
 			res.writeHead(200, {'Content-Type': 'text/html'});
-			fs.createReadStream(__dirname + '/../Views/contact.html').pipe(res);
+			res.end(view);
 			break;
-		case '/mazeGenerator':
+		}
+		case '/mazeGenerator':{
+			let view = fs.readFileSync(globals.paths.Views + '/mazeGenerator.html');
+			view = controllerLogic.addNavigationBar(view);
 			res.writeHead(200, {'Content-Type': 'text/html'});
-			fs.createReadStream(__dirname + '/../Views/mazeGenerator.html').pipe(res);
+			res.end(view);
 			break;
-		case '/2dTreeGenerator':
+		}
+		case '/2dTreeGenerator':{
+			let view = fs.readFileSync(globals.paths.Views + '/2dTreeGenerator.html');
+			view = controllerLogic.addNavigationBar(view);
 			res.writeHead(200, {'Content-Type': 'text/html'});
-			fs.createReadStream(__dirname + '/../Views/2dTreeGenerator.html').pipe(res);
+			res.end(view);
 			break;
-		case '/mtgPrices':
+		}
+		case '/mtgPrices':{
+			let view = fs.readFileSync(globals.paths.Views + '/mtgPrices.html');
+			view = controllerLogic.addNavigationBar(view);
 			res.writeHead(200, {'Content-Type': 'text/html'});
-			fs.createReadStream(__dirname + '/../Views/mtgPrices.html').pipe(res);
+			res.end(view);
 			break;
-		case '/alphaMaskExample':
+		}
+		case '/alphaMaskExample':{
+			let view = fs.readFileSync(globals.paths.Views + '/alphaMaskExample.html');
+			view = controllerLogic.addNavigationBar(view);
 			res.writeHead(200, {'Content-Type': 'text/html'});
-			fs.createReadStream(__dirname + '/../Views/alphaMaskExample.html').pipe(res);
+			res.end(view);
 			break;
-		case '/reactIndex':
+		}
+		case '/reactIndex':{
 			reactTranspiler.transpileView(req, res, '/reactIndex');
 			break;
-		case '/mtgPricesMustache':
-			let template = fs.readFileSync(__dirname + '/../Views/mtgPrices.mustache');		
+		}
+		case '/mtgPricesMustache':{
+			let template = fs.readFileSync(globals.paths.Views + '/mtgPrices.mustache');		
 			var cards = dataFunctions.getMtgPriceListMustache(req,res);
 			let view = Mustache.to_html(template.toString(), {cards});
 			view = controllerLogic.addNavigationBar(view);
@@ -72,9 +91,10 @@ var getGetMethod = function(req,res){
 			res.writeHead(200, {'Content-Type': 'text/html'});
 			res.end(view);
 			break;
-		case '/asyncTest':				
+		}
+		case '/asyncTest':{				
 				var html = "";
-				fs.createReadStream(__dirname + '/../Views/index.html')
+				fs.createReadStream(globals.paths.Views + '/index.html')
 				.on('data',function(data){
 					html += data;
 				})
@@ -83,115 +103,115 @@ var getGetMethod = function(req,res){
 					res.end(html);
 				});
 			break;
-			
+		}
 			
 		//PARTIAL VIEWS	
 			
-		case '/navibar.html':
+		case '/navibar.html':{
 			res.writeHead(200, {'Content-Type': 'text/html'});
-			fs.createReadStream(__dirname + '/../Views/navibar.html').pipe(res);
+			fs.createReadStream(globals.paths.Views + '/navibar.html').pipe(res);
 			break;		
-			
+		}
 		//STYLESHEETS		
 			
 		case '/navibarStylesheet.css':
 			res.writeHead(200, {'Content-Type': 'text/css'});
-			fs.createReadStream(__dirname + '/../Styles/navibarStylesheet.css').pipe(res);
+			fs.createReadStream(globals.paths.Styles + '/navibarStylesheet.css').pipe(res);
 			break;
 		case '/indexStylesheet.css':
 			res.writeHead(200, {'Content-Type': 'text/css'});
-			fs.createReadStream(__dirname + '/../Styles/indexStylesheet.css').pipe(res);
+			fs.createReadStream(globals.paths.Styles + '/indexStylesheet.css').pipe(res);
 			break;
 		case '/bootstrap.min.css':
 			res.writeHead(200, {'Content-Type': 'text/css'});
-			fs.createReadStream(__dirname + '/../Styles/bootstrap.min.css').pipe(res);
+			fs.createReadStream(globals.paths.Styles + '/bootstrap.min.css').pipe(res);
 			break;
 		case '/mtgPrices.css':
 			res.writeHead(200, {'Content-Type': 'text/css'});
-			fs.createReadStream(__dirname + '/../Styles/mtgPrices.css').pipe(res);
+			fs.createReadStream(globals.paths.Styles + '/mtgPrices.css').pipe(res);
 			break;
 		case '/tablesorterDarkTheme.css':
 			res.writeHead(200, {'Content-Type': 'text/css'});
-			fs.createReadStream(__dirname + '/../Styles/tablesorterDarkTheme.css').pipe(res);
+			fs.createReadStream(globals.paths.Styles + '/tablesorterDarkTheme.css').pipe(res);
 			break;
 		case '/tablesorterMetroDarkTheme.css':
 			res.writeHead(200, {'Content-Type': 'text/css'});
-			fs.createReadStream(__dirname + '/../Styles/tablesorterMetroDarkTheme.css').pipe(res);
+			fs.createReadStream(globals.paths.Styles + '/tablesorterMetroDarkTheme.css').pipe(res);
 			break;
 		case '/tablesorterDefaultTheme.css':
 			res.writeHead(200, {'Content-Type': 'text/css'});
-			fs.createReadStream(__dirname + '/../Styles/tablesorterDefaultTheme.css').pipe(res);
+			fs.createReadStream(globals.paths.Styles + '/tablesorterDefaultTheme.css').pipe(res);
 			break;
 		case '/tablesorterMaterializeTheme.css':
 			res.writeHead(200, {'Content-Type': 'text/css'});
-			fs.createReadStream(__dirname + '/../Styles/tablesorterMaterializeTheme.css').pipe(res);
+			fs.createReadStream(globals.paths.Styles + '/tablesorterMaterializeTheme.css').pipe(res);
 			break;
 			
 		//SCRIPTS
 		
 		case '/jquery-3.1.1.min.js':
 			res.writeHead(200, {'Content-Type': 'text/javascript'});
-			fs.createReadStream(__dirname + '/../Scripts/jquery-3.1.1.min.js').pipe(res);
+			fs.createReadStream(globals.paths.Scripts + '/jquery-3.1.1.min.js').pipe(res);
 			break;
 		case '/mazeGenerator.js':
 			res.writeHead(200, {'Content-Type': 'text/javascript'});
-			fs.createReadStream(__dirname + '/../Scripts/mazeGenerator.js').pipe(res);
+			fs.createReadStream(globals.paths.Scripts + '/mazeGenerator.js').pipe(res);
 			break;
 		case '/p5.js':
 			res.writeHead(200, {'Content-Type': 'text/javascript'});
-			fs.createReadStream(__dirname + '/../Scripts/p5.js').pipe(res);
+			fs.createReadStream(globals.paths.Scripts + '/p5.js').pipe(res);
 			break;
 		case '/p5.dom.js':
 			res.writeHead(200, {'Content-Type': 'text/javascript'});
-			fs.createReadStream(__dirname + '/../Scripts/p5.dom.js').pipe(res);
+			fs.createReadStream(globals.paths.Scripts + '/p5.dom.js').pipe(res);
 			break;
 		case '/2dTreeGenerator.js':
 			res.writeHead(200, {'Content-Type': 'text/javascript'});
-			fs.createReadStream(__dirname + '/../Scripts/2dTreeGenerator.js').pipe(res);
+			fs.createReadStream(globals.paths.Scripts + '/2dTreeGenerator.js').pipe(res);
 			break;
 		case '/navibar.js':
 			res.writeHead(200, {'Content-Type': 'text/javascript'});
-			fs.createReadStream(__dirname + '/../Scripts/navibar.js').pipe(res);
+			fs.createReadStream(globals.paths.Scripts + '/navibar.js').pipe(res);
 			break;
 		case '/mtgPrices.js':
 			res.writeHead(200, {'Content-Type': 'text/javascript'});
-			fs.createReadStream(__dirname + '/../Scripts/mtgPrices.js').pipe(res);
+			fs.createReadStream(globals.paths.Scripts + '/mtgPrices.js').pipe(res);
 			break;
 		case '/mtgPricesMustache.js':
 			res.writeHead(200, {'Content-Type': 'text/javascript'});
-			fs.createReadStream(__dirname + '/../Scripts/mtgPricesMustache.js').pipe(res);
+			fs.createReadStream(globals.paths.Scripts + '/mtgPricesMustache.js').pipe(res);
 			break;
 		case '/alphaMaskExample.js':
 			res.writeHead(200, {'Content-Type': 'text/javascript'});
-			fs.createReadStream(__dirname + '/../Scripts/alphaMaskExample.js').pipe(res);
+			fs.createReadStream(globals.paths.Scripts + '/alphaMaskExample.js').pipe(res);
 			break;
 		case '/jquery.tablesorter.js':
 			res.writeHead(200, {'Content-Type': 'text/javascript'});
-			fs.createReadStream(__dirname + '/../Scripts/jquery.tablesorter.js').pipe(res);
+			fs.createReadStream(globals.paths.Scripts + '/jquery.tablesorter.js').pipe(res);
 			break;
 		case '/onHoverHover.js':
 			res.writeHead(200, {'Content-Type': 'text/javascript'});
-			fs.createReadStream(__dirname + '/../Scripts/onHoverHover.js').pipe(res);
+			fs.createReadStream(globals.paths.Scripts + '/onHoverHover.js').pipe(res);
 			break;
 			
 		//Images
 		
 		case '/blueGradient.jpg':
-			fs.readFile(__dirname + '/../Images/blueGradient.jpg', function(err, image) {
+			fs.readFile(globals.paths.Images + "/blueGradient.jpg", function(err, image) {
 				if (err) throw err;
 				res.writeHead(200, {'Content-Type': 'image/jpeg'});
 				res.end(image);
 			});
 			break;
 		case '/mask.png':
-			fs.readFile(__dirname + '/../Images/mask.png', function(err, image) {
+			fs.readFile(globals.paths.Images + "/mask.png", function(err, image) {
 				if (err) throw err;
 				res.writeHead(200, {'Content-Type': 'image/png'});
 				res.end(image);
 			});
 			break;
 		case '/moonwalk.jpg':
-			fs.readFile(__dirname + '/../Images/moonwalk.jpg', function(err, image) {
+			fs.readFile(globals.paths.Images + "/moonwalk.jpg", function(err, image) {
 				if (err) throw err;
 				res.writeHead(200, {'Content-Type': 'image/jpeg'});
 				res.end(image);
@@ -219,9 +239,13 @@ var getGetMethod = function(req,res){
 		//NOT FOUND	
 			
 		default:
-			console.log("Couldn't find " + req.url);
+			let error = "Couldn't find " + req.url;
+			console.log(error);
+			let template = fs.readFileSync(globals.paths.Views + '/404.mustache');
+			let view = Mustache.to_html(template.toString(), {error});
+			
 			res.writeHead(404, {'Content-Type': 'text/html'});
-			fs.createReadStream(__dirname + '/../Views/404.html').pipe(res);
+			res.end(view);
 			break;
 	}
 };
@@ -235,11 +259,11 @@ var getPostMethod = function(req,res){
 					switch(key){
 						case "nameForm":
 							dataFunctions.addUser(req.body.firstName,req.body.lastName);
-							fs.createReadStream(__dirname + '/../Views/index.html').pipe(res);
+							fs.createReadStream(globals.paths.Views + '/index.html').pipe(res);
 							break;
 						default:
 							res.writeHead(200, {'Content-Type': 'text/html'});
-							res.end("<span>Whooops</span>");				
+							res.end("<span>Whooops</span>");			
 							break;
 					}
 					return res;
