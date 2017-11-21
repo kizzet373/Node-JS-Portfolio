@@ -11,7 +11,7 @@
 
 var img;
 var imgMask;
-var poop=0;
+var rotationIndex=0;
 
 function preload() {
   img = loadImage("moonwalk.jpg");
@@ -33,11 +33,11 @@ function setup() {
 }
 
 function draw() {
-	poop++;
+	rotationIndex++;
 	
 	push();
 	translate(width/2,height/2);
-	rotate(PI*poop/4);
+	//rotate(PI*rotationIndex/4);
 	background(0, 102, 153);
 	image(img,0,0);
 	pop();

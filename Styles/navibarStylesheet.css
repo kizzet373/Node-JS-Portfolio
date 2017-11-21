@@ -56,7 +56,7 @@ body{
 	text-decoration: none;
 }
 
-.navibar-item-link, .navibar-subitem-link {
+.navibar-item-content, .navibar-subitem-content {
 	display: inline-block;
 	color: white;
 	text-align: center;
@@ -66,10 +66,10 @@ body{
 	height: auto;
 }
 
-.navibar-item-link {
+.navibar-item-content {
 	min-width: 110px;		
 }
 
-navibar-subitem-link {
+navibar-subitem-content {
 }
 

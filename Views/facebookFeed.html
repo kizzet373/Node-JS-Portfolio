@@ -1,0 +1,18 @@
+<html>
+	<head>
+		<script language="javascript" type="text/javascript" src="jquery-3.1.1.min.js"></script>
+		<script language="javascript" type="text/javascript" src="facebookFeed.js"></script>
+
+		<link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="navibarStylesheet.css">
+		<link rel="stylesheet" type="text/css" href="facebookFeedStylesheet.css">
+	</head>
+	<body>
+		<div id="navibar-placeholder"></div>
+		<div id="facebookPostFeedContainer">
+			<fb:login-button id="fb-btn" scope="public_profile,email,user_posts" onlogin="checkLoginState();"></fb:login-button>
+			<button id="btn" onclick="testAPI()">Get My Posts!</button>
+			<div id="facebookPostFeed"></div>
+		</div>
+	</body>
+</html>

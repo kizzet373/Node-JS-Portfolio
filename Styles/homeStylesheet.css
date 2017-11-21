@@ -7,3 +7,8 @@ body {
 	background-size: cover;
 	color: rgb(255,255,255);
 }
+
+#contentContainer{
+	width: 300px; 
+	margin: 0 auto;
+}
